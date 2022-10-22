@@ -2,8 +2,6 @@
 
 ## How to use
 
-```sh
-npm install
-npm start
-```
+Usage is based on `docker`.
 
+Use `make dev` to start the development server (it runs `npm start` inside the docker container).
