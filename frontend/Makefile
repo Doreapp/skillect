@@ -18,6 +18,14 @@ _start:
 dev: ## Start the development server
 dev: build _start
 
+format: ## Reformat the code
+format: build
+	$(DOCKER_RUN) -t $(DOCKER_IMAGE) run format
+
+lint: ## Check code format
+lint: build
+	$(DOCKER_RUN) -t $(DOCKER_IMAGE) run lint
+
 _interactive: # Enter the docker image interactivelly
 _interactive: build
 	$(DOCKER_RUN) -i --entrypoint /bin/bash -t $(DOCKER_IMAGE)
