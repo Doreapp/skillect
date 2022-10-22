@@ -1,0 +1,12 @@
+name: Frontend Continuous Integration
+run-name: Frontend checks
+on: [push]
+jobs:
+  Check-lint:
+    runs-on: ubuntu-latest
+    name: Frontend lint
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Check lint
+        run: cd frontend && make lint
