@@ -21,3 +21,10 @@ dev: build _start
 _interactive: # Enter the docker image interactivelly
 _interactive: build
 	$(DOCKER_RUN) -i --entrypoint /bin/bash -t $(DOCKER_IMAGE)
+
+node_modules: # Build and return node_modules directory using docker
+node_modules: build
+	mkdir node_modules
+	$(DOCKER_RUN) \
+		-v $(PWD)/node_modules:/app/node_modules \
+		-t $(DOCKER_IMAGE) install
