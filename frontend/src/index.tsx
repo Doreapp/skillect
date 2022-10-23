@@ -23,6 +23,20 @@ const theme = createTheme({
         container: rootElement
       }
     }
+  },
+  palette: {
+    primary: {
+      main: '#2b4079',
+      light: '#5b6aa8',
+      dark: '#00194b',
+      contrastText: '#fff'
+    },
+    secondary: {
+      main: '#d23040',
+      light: '#ff666b',
+      dark: '#9a001a',
+      contrastText: '#fff'
+    }
   }
 })
 
