@@ -24,7 +24,7 @@ const mockSchools = [
 
 export default function App (): JSX.Element {
   return (
-    <Container className='p-0'>
+    <Container className='p-0' maxWidth={false}>
         <AppBar title="Schools"/>
         <SchoolsPage schools={mockSchools}/>
         <Copyright />
