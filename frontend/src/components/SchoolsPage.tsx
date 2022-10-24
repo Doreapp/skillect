@@ -2,12 +2,25 @@
  * Page containing schools
  */
 
-import { Container, List, ListItem, ListItemText } from '@mui/material'
+import { List, ListItem, ListItemText, ListItemButton, ListItemIcon } from '@mui/material'
 import * as React from 'react'
 import School from '../models/School'
+import AddIcon from '@mui/icons-material/Add'
 
 export interface SchoolsPageProps {
   schools: School[]
+}
+
+function AddButton (): JSX.Element {
+  return <ListItemButton
+    onClick={(event) => console.log(event, 0)}
+    alignItems="center" >
+    <ListItemIcon>
+      <AddIcon color="primary"/>
+    </ListItemIcon>
+    <ListItemText
+      primary="Add a school" />
+  </ListItemButton>
 }
 
 export default function SchoolsPage (props: SchoolsPageProps): JSX.Element {
@@ -15,19 +28,20 @@ export default function SchoolsPage (props: SchoolsPageProps): JSX.Element {
   let key = 0
   for (const school of props.schools) {
     items.push(
-        <Container maxWidth="sm">
-        <ListItem key={key++}>
+        <ListItem key={key++} className="p-0">
+          <ListItemButton>
             <ListItemText
                 primary={school.name}
                 secondary={school.description} />
+          </ListItemButton>
         </ListItem>
-        </Container>
     )
   }
 
   return (
      <List>
          {items}
+        {AddButton()}
      </List>
   )
 }
