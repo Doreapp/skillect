@@ -1,11 +1,15 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import { CssBaseline } from '@mui/material'
-import './index.css'
-import App from './App'
+import React from "react"
+import {createRoot} from "react-dom/client"
+import {
+  createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
+} from "@mui/material/styles"
+import {CssBaseline} from "@mui/material"
+import "./index.css"
+import App from "./App"
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById("root")
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(rootElement!)
 
@@ -15,29 +19,29 @@ const theme = createTheme({
   components: {
     MuiPopover: {
       defaultProps: {
-        container: rootElement
-      }
+        container: rootElement,
+      },
     },
     MuiPopper: {
       defaultProps: {
-        container: rootElement
-      }
-    }
+        container: rootElement,
+      },
+    },
   },
   palette: {
     primary: {
-      main: '#2b4079',
-      light: '#5b6aa8',
-      dark: '#00194b',
-      contrastText: '#fff'
+      main: "#2b4079",
+      light: "#5b6aa8",
+      dark: "#00194b",
+      contrastText: "#fff",
     },
     secondary: {
-      main: '#d23040',
-      light: '#ff666b',
-      dark: '#9a001a',
-      contrastText: '#fff'
-    }
-  }
+      main: "#d23040",
+      light: "#ff666b",
+      dark: "#9a001a",
+      contrastText: "#fff",
+    },
+  },
 })
 
 root.render(
