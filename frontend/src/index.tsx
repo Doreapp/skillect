@@ -1,3 +1,9 @@
+/**
+ * Entrypoint of the frontend.
+ *
+ * Setup the web page.
+ */
+
 import React from "react"
 import {createRoot} from "react-dom/client"
 import {

@@ -1,3 +1,9 @@
+/**
+ * Main content of the web page.
+ *
+ * Will always be displayed by `index.tsx` main script.
+ */
+
 import * as React from "react"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
@@ -5,6 +11,10 @@ import AppBar from "./components/AppBar"
 import SchoolsPage from "./components/SchoolsPage"
 import School from "./models/School"
 
+/**
+ * Copyright element
+ * @returns Element containing copyright information
+ */
 function Copyright(): JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -20,6 +30,10 @@ const mockSchools = [
   new School("KTH", "Ecole d'ingénieur en Suède", "https://kth.se"),
 ]
 
+/**
+ * Builds the app-level element
+ * @returns Element containing the main content
+ */
 export default function App(): JSX.Element {
   return (
     <Container className="p-0 h-screen flex flex-col" maxWidth={false}>

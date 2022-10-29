@@ -17,6 +17,10 @@ export interface SchoolsPageProps {
   schools: School[]
 }
 
+/**
+ * Instantiate the "Add" button
+ * @returns Element representing the "+ Add" button
+ */
 function AddButton(): JSX.Element {
   return (
     <ListItemButton
