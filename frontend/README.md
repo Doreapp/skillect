@@ -8,4 +8,5 @@ Use `make dev` to start the development server (it runs `npm start` inside the d
 
 ## Development
 
-If one needs the `node_modules` folder (for instance to let the IDE make suggestions), one can run `make node_modules`.
+`make` commands are defined to facilitate the development.
+One can use `make help` to see the list of available commands.
