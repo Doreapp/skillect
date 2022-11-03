@@ -15,7 +15,7 @@ help:
 
 build: 		## Build docker image
 build:
-	docker build -t $(DOCKER_IMAGE) $(OPTIONS) .
+	docker build --file development.Dockerfile -t $(DOCKER_IMAGE) $(OPTIONS) .
 
 run_%: 		## Run 'npm run %'
 run_%:
