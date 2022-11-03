@@ -57,8 +57,12 @@ _init: _wait_for_db
 
 dev: # Start the backend server in development mode
 dev: _init
-	PORT=5000 \
-		gunicorn -k uvicorn.workers.UvicornWorker -c "${GUNICORN_CONF}" "app.main:app"
+	uvicorn \
+		--reload \
+		--host 0.0.0.0 \
+		--port 5000 \
+		--log-level info \
+		"app.main:app"
 
 serve: # Start the backend server in production mode
 serve: _init
