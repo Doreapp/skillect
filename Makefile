@@ -13,7 +13,13 @@ help:
 	@echo
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-start:		## Start the application using docker-compose
+dev:		## Start the application in development mode using docker-compose
+	docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose.development.yml \
+		up --build --detach
+
+start: 		## Start the application just as in production using docker-compose
 	docker-compose up --build --detach
 
 stop:		## Stop the application

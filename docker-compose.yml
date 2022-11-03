@@ -46,9 +46,10 @@ services:
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
-    user: ${USER?User not set}
     build:
       context: ./frontend
+    ports:
+      - "80:80"
 
 volumes:
   app-db-data:
