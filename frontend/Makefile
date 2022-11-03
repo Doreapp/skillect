@@ -2,7 +2,7 @@ PORT=3000
 DOCKER_IMAGE=skillect-frontend
 DOCKER_RUN=docker run \
  -u $(shell id -u):$(shell id -g) \
- -v $(PWD)/src/:/app/src/ \
+ -v $(shell pwd)/src/:/app/src/ \
  -p $(PORT):$(PORT)
 
 all: build dev
@@ -41,7 +41,7 @@ _interactive: build
 _node_modules: # Force node_nodules update
 	mkdir -p node_modules
 	$(DOCKER_RUN) \
-		-v $(PWD)/node_modules:/app/node_modules \
+		-v $(shell pwd)/node_modules:/app/node_modules \
 		-t $(DOCKER_IMAGE) install
 
 node_modules: 	## Build and return node_modules directory using docker
