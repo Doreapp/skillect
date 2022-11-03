@@ -22,6 +22,7 @@ ADD Makefile \
  .pylintrc \
  gunicorn_conf.py \
  /work/
+COPY app/ /work/app/
 
 ENTRYPOINT [ "make" ]
-CMD ["dev"]
+CMD ["serve"]

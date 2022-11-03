@@ -59,6 +59,10 @@ dev: # Start the backend server in development mode
 dev: _init
 	gunicorn -k uvicorn.workers.UvicornWorker -c "${GUNICORN_CONF}" "app.main:app"
 
+serve: # Start the backend server in production mode
+serve: _init
+	gunicorn -k uvicorn.workers.UvicornWorker -c "${GUNICORN_CONF}" "app.main:app"
+
 start_worker: # Start the celery worker
 start_worker: _wait_for_db
 	celery -A app.worker worker -l info -Q main-queue -c 1
