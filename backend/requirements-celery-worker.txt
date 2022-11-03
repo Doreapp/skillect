@@ -1,3 +1,0 @@
-# Requirements for the celery worker
-raven==6.10.0
-celery==5.2.7

@@ -17,6 +17,8 @@ ADD requirements.txt requirements-dev.txt /work/
 RUN python3 -m venv $VIRTUAL_ENV \
  && pip install -r requirements.txt -r requirements-dev.txt
 
+ENV C_FORCE_ROOT=1
+
 # Other project-specific files
 ADD Makefile \
  .pylintrc \
