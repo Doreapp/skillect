@@ -1,5 +1,10 @@
 USER=$(shell id -u):$(shell id -g)
 
+BACKEND_DIR=backend
+FRONTEND_DIR=frontend
+MAKE_BACKEND=make --directory=$(BACKEND_DIR)
+MAKE_FRONTEND=make --directory=$(FRONTEND_DIR)
+
 all: start
 
 help: 		## Display help message
@@ -15,5 +20,16 @@ stop:		## Stop the application
 	docker-compose down --remove-orphans
 
 clean: 		## Clean the application
-	make --directory=backend clean
-	make --directory=frontend clean
+clean:
+	$(MAKE_BACKEND) clean
+	$(MAKE_FRONTEND) clean
+
+lint: 		## Check the format of the whole application
+lint:
+	$(MAKE_BACKEND) make_lint
+	$(MAKE_FRONTEND) lint
+
+format: 	## Reformat the code of the whole application
+format:
+	$(MAKE_BACKEND) make_format
+	$(MAKE_FRONTEND) format

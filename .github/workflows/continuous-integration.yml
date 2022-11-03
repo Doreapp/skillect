@@ -1,12 +1,12 @@
-name: Frontend Continuous Integration
-run-name: Frontend checks
+name: Continuous Integration
+run-name: Continuous Integration
 on: [push]
 jobs:
   Check-lint:
     runs-on: ubuntu-latest
-    name: Frontend lint
+    name: Check lint
     steps:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Check lint
-        run: cd frontend && make lint
+        run: make lint
