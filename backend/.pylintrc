@@ -1,0 +1,9 @@
+[MASTER]
+
+good-names=
+    _,
+    db,
+    id
+
+disable=
+    too-few-public-methods

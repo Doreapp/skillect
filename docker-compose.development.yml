@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+
+  celeryworker:
+    volumes:
+      - ./backend/app:/work/app
+
+  backend:
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/app:/work/app
+    environment:
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
+    command: dev
+
+  frontend:
+    build:
+      dockerfile: development.Dockerfile
+    user: ${USER?User not set}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src/:/app/src/
+    command: start
