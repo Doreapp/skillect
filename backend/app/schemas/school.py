@@ -18,7 +18,7 @@ class SchoolCreate(SchoolBase):
 
 
 class SchoolUpdate(SchoolBase):
-    """Properties to receive on item update"""
+    """Properties to receive on school update"""
 
 
 class SchoolInDBBase(SchoolBase):
