@@ -35,7 +35,7 @@ interface AppState {
  * Builds the app-level element
  * @returns Element containing the main content
  */
-export default class App extends React.Component<undefined, AppState> {
+export default class App extends React.Component<{}, AppState> {
   state: AppState = {
     schools: [],
     fetching: true,
@@ -59,7 +59,10 @@ export default class App extends React.Component<undefined, AppState> {
       <Container className="p-0 h-screen flex flex-col" maxWidth={false}>
         <AppBar title="Schools" />
         <Container className="p-0 flex-1">
-          <SchoolsPage schools={this.state.schools} />
+          <SchoolsPage
+            schools={this.state.schools}
+            loading={this.state.fetching}
+          />
         </Container>
         <Copyright />
       </Container>
