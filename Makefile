@@ -19,6 +19,9 @@ dev:		## Start the application in development mode using docker-compose
 		-f docker-compose.development.yml \
 		up --build --detach
 
+follow: 	## Start following the logs of frontend and backend services
+	docker-compose logs --follow backend frontend
+
 start: 		## Start the application just as in production using docker-compose
 	docker-compose up --build --detach
 
