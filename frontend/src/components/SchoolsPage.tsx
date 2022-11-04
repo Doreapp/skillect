@@ -10,11 +10,11 @@ import {
   ListItemIcon,
 } from "@mui/material"
 import * as React from "react"
-import School from "../models/School"
+import {ISchool} from "../models/School"
 import AddIcon from "@mui/icons-material/Add"
 
 export interface SchoolsPageProps {
-  schools: School[]
+  schools: ISchool[]
 }
 
 /**
