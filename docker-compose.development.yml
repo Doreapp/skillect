@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.6"
 services:
 
   proxy:
@@ -28,16 +28,27 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.services.${STACK_NAME?Variable not set}-traefik-public.loadbalancer.server.port=80
 
+  db:
+    env_file:
+      - .env
 
   celeryworker:
+    build:
+      context: ./backend
     volumes:
       - ./backend/app:/work/app
+    env_file:
+      - .env
 
   backend:
+    build:
+      context: ./backend
     volumes:
       - ./backend/app:/work/app
     environment:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
+    env_file:
+      - .env
     command: dev
     labels:
       - traefik.enable=true
@@ -45,9 +56,9 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=5000
 
-
   frontend:
     build:
+      context: ./frontend
       dockerfile: development.Dockerfile
     user: ${USER?User not set}
     volumes:

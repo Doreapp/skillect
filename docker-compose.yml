@@ -30,7 +30,7 @@ services:
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
     env_file:
-      - .env
+      - production.env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
 
@@ -38,19 +38,17 @@ services:
     image: rabbitmq:3
 
   celeryworker:
-    image: '${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}'
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     depends_on:
       - db
       - queue
     env_file:
-      - .env
+      - production.env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST?Variable not set}
-    build:
-      context: ./backend
     command: start_worker
 
   backend:
@@ -59,19 +57,15 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - production.env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       # - SMTP_HOST=${SMTP_HOST}
-    build:
-      context: ./backend
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
-    build:
-      context: ./frontend
 
 volumes:
   app-db-data:
