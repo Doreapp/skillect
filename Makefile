@@ -90,6 +90,7 @@ deploy: stop _deploy_environment production.env
 	docker-compose \
 		--env-file=production.env \
 		-f docker-compose.yml \
+		-f docker-compose.production.yml \
 		up --detach
 
 stop:		## Stop the application

@@ -17,20 +17,21 @@ services:
       # Do not expose all Docker services, only the ones explicitly exposed
       - --providers.docker.exposedbydefault=false
       # Enable Docker Swarm mode
-      - --providers.docker.swarmmode
+      # - --providers.docker.swarmmode
       # Enable the access log, with HTTP requests
       - --accesslog
       # Enable the Traefik log, for configurations and errors
       - --log
       # Enable the Dashboard and API
       - --api
+    labels:
+      # Enable Traefik for this service, to make it available in the public network
+      - traefik.enable=true
 
   db:
     image: postgres:12
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
-    env_file:
-      - production.env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
 
@@ -42,11 +43,8 @@ services:
     depends_on:
       - db
       - queue
-    env_file:
-      - production.env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST?Variable not set}
     command: start_worker
@@ -56,16 +54,21 @@ services:
     user: ${USER?User not set}
     depends_on:
       - db
-    env_file:
-      - production.env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       # - SMTP_HOST=${SMTP_HOST}
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
 
 volumes:
   app-db-data:
