@@ -11,7 +11,10 @@ DOCKER_REPO_BACKEND=skillect-backend
 DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
 DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 
-all: start
+SETTINGS_EMAIL=doreapp.contact@gmail.com
+TRAEFIK_USERNAME=admin
+
+all: dev
 
 help: 		## Display help message
 help:
@@ -38,13 +41,19 @@ endif
 ifndef POSTGRES_PASSWORD
 	$(error POSTGRES_PASSWORD variable must be set to Postgres's password)
 endif
-	@echo "DOMAIN=$(DOMAINE)" >> production.env
+ifndef TRAEFIK_HASHED_PASSWORD
+	$(error TRAEFIK_HASHED_PASSWORD variable must be set to Traefik's hashed password)
+endif
+	@echo "DOMAIN=$(DOMAIN)" >> production.env
 	@echo "STACK_NAME=skillect" >> production.env
 	@echo "PROJECT_NAME=skillect" >> production.env
+	@echo "EMAIL=$(SETTINGS_EMAIL)" >> production.env
 	@echo "# Docker images" >> production.env
 	@echo "DOCKER_IMAGE_FRONTEND=$(DOCKER_IMAGE_FRONTEND)" >> production.env
 	@echo "DOCKER_IMAGE_BACKEND=$(DOCKER_IMAGE_BACKEND)" >> production.env
 	@echo "# Traefik variables" >> production.env
+	@echo "TRAEFIK_USERNAME=$(TRAEFIK_USERNAME)" >> production.env
+	@echo "TRAEFIK_HASHED_PASSWORD=$(TRAEFIK_HASHED_PASSWORD)" >> production.env
 	@echo "TRAEFIK_PUBLIC_NETWORK=traefik-public" >> production.env
 	@echo "TRAEFIK_TAG=skillect" >> production.env
 	@echo "TRAEFIK_PUBLIC_TAG=traefik-public" >> production.env
@@ -81,17 +90,32 @@ pull: production.env
 	@echo Pulling the images
 	docker-compose --env-file=production.env pull
 
+_deploy_node_update: # For whatever reason, it needs to be extracted to another target
+	docker node update \
+		--label-add traefik-public.traefik-public-certificates=true \
+		$(shell docker info -f '{{.Swarm.NodeID}}')
+
 _deploy_environment: # Create the production environment
 	@echo "*** Creating production environment"
-	docker network create traefik-public || true
+	docker swarm init
+	docker network create --scope=swarm traefik-public
+	make _deploy_node_update
 
-deploy:		## Start the application just as in production using docker-compose
-deploy: stop _deploy_environment production.env
+docker-stack.yml: production.env
 	docker-compose \
 		--env-file=production.env \
 		-f docker-compose.yml \
 		-f docker-compose.production.yml \
-		up --detach
+		config >> docker-stack.yml
+
+deploy:		## Start the application just as in production using docker-compose
+deploy: stop_deploy _deploy_environment docker-stack.yml
+	docker stack deploy -c docker-stack.yml skillect
+
+stop_deploy:	## Stop the deployed application
+	docker stack rm skillect || true
+	docker swarm leave --force || true
+	docker network rm traefik-public || true
 
 stop:		## Stop the application
 	docker-compose down --remove-orphans
