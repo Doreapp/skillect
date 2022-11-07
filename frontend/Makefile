@@ -13,6 +13,9 @@ help:
 	@echo
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+clean: 		## Clean the directory
+	@echo Nothing to do
+
 build: 		## Build docker image
 build:
 	docker build --file development.Dockerfile -t $(DOCKER_IMAGE) $(OPTIONS) .

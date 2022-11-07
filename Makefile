@@ -124,6 +124,7 @@ clean: 		## Clean the application
 clean:
 	$(MAKE_BACKEND) clean
 	$(MAKE_FRONTEND) clean
+	rm -f production.env docker-stack.yml
 
 lint: 		## Check the format of the whole application
 lint:
