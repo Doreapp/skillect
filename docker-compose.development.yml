@@ -42,6 +42,7 @@ services:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
 
   backend:
+    user: ${USER?User not set}
     build:
       context: ./backend
     volumes:

@@ -114,11 +114,14 @@ deploy: stop_deploy _deploy_environment docker-stack.yml
 
 stop_deploy:	## Stop the deployed application
 	docker stack rm skillect || true
-	docker swarm leave --force || true
 	docker network rm traefik-public || true
+	docker swarm leave --force || true
 
 stop:		## Stop the application
 	docker-compose down --remove-orphans
+
+logs-%:
+	docker service logs skillect_$(shell echo $@ | cut -d - -f 2-)
 
 clean: 		## Clean the application
 clean:
