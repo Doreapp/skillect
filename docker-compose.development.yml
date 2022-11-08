@@ -24,20 +24,15 @@ services:
       # Enable the Dashboard and API in insecure mode for local development
       - --api.insecure=true
     labels:
+      - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.services.${STACK_NAME?Variable not set}-traefik-public.loadbalancer.server.port=80
-
-  db:
-    env_file:
-      - .env
 
   celeryworker:
     build:
       context: ./backend
     volumes:
       - ./backend/app:/work/app
-    env_file:
-      - .env
     environment:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
 
@@ -49,10 +44,11 @@ services:
       - ./backend/app:/work/app
     environment:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
-    env_file:
-      - .env
     command: dev
     labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=5000
 
   frontend:
@@ -64,6 +60,9 @@ services:
       - ./frontend/src/:/app/src/
     command: start
     labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=3000
 
 networks:

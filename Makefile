@@ -23,6 +23,7 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 dev:		## Start the application in development mode using docker-compose
+	ENV_FILE=.env \
 	docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose.development.yml \
@@ -105,7 +106,6 @@ docker-stack.yml: production.env
 	docker-compose \
 		--env-file=production.env \
 		-f docker-compose.yml \
-		-f docker-compose.production.yml \
 		config >> docker-stack.yml
 
 deploy:		## Start the application just as in production using docker-compose
