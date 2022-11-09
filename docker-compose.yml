@@ -87,10 +87,6 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     env_file:
       - ${ENV_FILE-production.env}
-    deploy:
-      placement:
-        constraints:
-          - node.labels.${STACK_NAME?Variable not set}.app-db-data == true
 
   queue:
     image: rabbitmq:3
