@@ -46,6 +46,9 @@ endif
 	docker push $(DOCKER_IMAGE_FRONTEND):latest
 	docker push $(DOCKER_IMAGE_BACKEND):$(TODAY)
 	docker push $(DOCKER_IMAGE_BACKEND):latest
+	@echo Docker images are available at:
+	@echo "  * https://hub.docker.com/repository/docker/$(DOCKER_IMAGE_FRONTEND)"
+	@echo "  * https://hub.docker.com/repository/docker/$(DOCKER_IMAGE_BACKEND)"
 
 stop:		## Stop the application
 	docker-compose down --remove-orphans
