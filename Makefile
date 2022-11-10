@@ -11,7 +11,9 @@ DOCKER_REPO_BACKEND=skillect-backend
 DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
 DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 
-all: start
+TRAEFIK_PUBLIC_NETWORK=traefik-public
+
+all: up
 
 help: 		## Display help message
 help:
@@ -24,6 +26,18 @@ dev:		## Start the application in development mode using docker-compose
 		-f docker-compose.yml \
 		-f docker-compose.development.yml \
 		up --build --detach
+
+$(TRAEFIK_PUBLIC_NETWORK): # Create the network
+	@docker network create $(TRAEFIK_PUBLIC_NETWORK) || \
+		echo "> $(TRAEFIK_PUBLIC_NETWORK) network already exist."
+
+up:			## Start the application in production mode using docker-compose
+up: $(TRAEFIK_PUBLIC_NETWORK)
+	cd $(FRONTEND_DIR) && docker build -t $(DOCKER_IMAGE_FRONTEND) .
+	cd $(BACKEND_DIR) && docker build -t $(DOCKER_IMAGE_BACKEND) .
+	DOCKER_IMAGE_FRONTEND=$(DOCKER_IMAGE_FRONTEND) \
+	DOCKER_IMAGE_BACKEND=$(DOCKER_IMAGE_BACKEND) \
+	docker-compose up -d
 
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend
