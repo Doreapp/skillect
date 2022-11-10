@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.6"
 services:
 
   proxy:
@@ -38,7 +38,7 @@ services:
     image: rabbitmq:3
 
   celeryworker:
-    image: '${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}'
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     depends_on:
       - db
       - queue
@@ -49,8 +49,6 @@ services:
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST?Variable not set}
-    build:
-      context: ./backend
     command: start_worker
 
   backend:
@@ -65,13 +63,9 @@ services:
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       # - SMTP_HOST=${SMTP_HOST}
-    build:
-      context: ./backend
 
   frontend:
     image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
-    build:
-      context: ./frontend
 
 volumes:
   app-db-data:

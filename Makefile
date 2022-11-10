@@ -5,6 +5,12 @@ FRONTEND_DIR=frontend
 MAKE_BACKEND=make --directory=$(BACKEND_DIR)
 MAKE_FRONTEND=make --directory=$(FRONTEND_DIR)
 
+DOCKER_USER=antoinemdn
+DOCKER_REPO_FRONTEND=skillect-frontend
+DOCKER_REPO_BACKEND=skillect-backend
+DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
+DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
+
 all: start
 
 help: 		## Display help message
@@ -22,8 +28,24 @@ dev:		## Start the application in development mode using docker-compose
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend
 
-start: 		## Start the application just as in production using docker-compose
-	docker-compose up --build --detach
+push:		## Push docker images to docker hub - Needs DOCKER_PASSWORD environment variable
+ifndef DOCKER_PASSWORD
+	$(error DOCKER_PASSWORD environment variable has to be set. It is $(DOCKER_USER)'s password)
+endif
+	@echo Logging in
+	@echo "$(DOCKER_PASSWORD)" | docker login --username $(DOCKER_USER) --password-stdin
+	@echo Building images
+	cd $(FRONTEND_DIR) && docker build -t $(DOCKER_IMAGE_FRONTEND):latest .
+	cd $(BACKEND_DIR) && docker build -t $(DOCKER_IMAGE_BACKEND):latest .
+	@echo Tagging the images
+	$(eval TODAY=$(shell date +%Y-%m-%d-%H-%M)) \
+		docker tag $(DOCKER_IMAGE_FRONTEND):latest $(DOCKER_IMAGE_FRONTEND):$(TODAY) \
+		&& docker tag $(DOCKER_IMAGE_BACKEND):latest $(DOCKER_IMAGE_BACKEND):$(TODAY)
+	@echo Pushing the images
+	docker push $(DOCKER_IMAGE_FRONTEND):$(TODAY)
+	docker push $(DOCKER_IMAGE_FRONTEND):latest
+	docker push $(DOCKER_IMAGE_BACKEND):$(TODAY)
+	docker push $(DOCKER_IMAGE_BACKEND):latest
 
 stop:		## Stop the application
 	docker-compose down --remove-orphans

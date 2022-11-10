@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.6"
 services:
 
   proxy:
@@ -30,10 +30,14 @@ services:
 
 
   celeryworker:
+    build:
+      context: ./backend
     volumes:
       - ./backend/app:/work/app
 
   backend:
+    build:
+      context: ./backend
     volumes:
       - ./backend/app:/work/app
     environment:
@@ -45,9 +49,9 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=5000
 
-
   frontend:
     build:
+      context: ./frontend
       dockerfile: development.Dockerfile
     user: ${USER?User not set}
     volumes:
