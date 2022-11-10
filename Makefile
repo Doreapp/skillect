@@ -27,6 +27,10 @@ dev:		## Start the application in development mode using docker-compose
 		-f docker-compose.development.yml \
 		up --build --detach
 
+deploy:
+	docker-compose -f docker-compose.test.yml pull
+	docker-compose -f docker-compose.test.yml up --detach
+
 $(TRAEFIK_PUBLIC_NETWORK): # Create the network
 	@docker network create $(TRAEFIK_PUBLIC_NETWORK) || \
 		echo "> $(TRAEFIK_PUBLIC_NETWORK) network already exist."
