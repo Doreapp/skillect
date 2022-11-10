@@ -4,19 +4,24 @@ services:
   traefik:
     image: "traefik:v2.9"
     command:
-      - "--log.level=DEBUG"
-      - "--api.insecure=true"
+      # Use DEBUG for verbose-level logs
+      - --log.level=WARN
+      # Enable the dashboard API
+      - --api
+      # Use docker (in compose mode)
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # Use HTTPS (port 443) as entrypoint
       - "--entrypoints.websecure.address=:443"
+      # Certificate resolver: Use letsencrypt with TLS challenge
       - "--certificatesresolvers.le.acme.tlschallenge=true"
-      #- "--certificatesresolvers.le.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.le.acme.email=doreapp.contact@gmail.com"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     ports:
       - "443:443"
       - "8080:8080"
     volumes:
+      # Volume for the certificates
       - "certificate:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
@@ -25,7 +30,9 @@ services:
     environment:
       - SERVER_HOST=https://mandin.dev
     labels:
+      # Enable Traefik proxy
       - "traefik.enable=true"
+      # Setup router
       - "traefik.http.routers.frontend.rule=Host(`mandin.dev`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=le"
