@@ -17,7 +17,7 @@ services:
       - "443:443"
       - "8080:8080"
     volumes:
-      - "./letsencrypt:/letsencrypt"
+      - "certificate:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   frontend:
@@ -29,3 +29,6 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`mandin.dev`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=le"
+
+volumes:
+  certificate:
