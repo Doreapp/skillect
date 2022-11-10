@@ -12,6 +12,7 @@ DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
 DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 
 TRAEFIK_PUBLIC_NETWORK=traefik-public
+DOMAIN=mandin.dev
 
 all: up
 
@@ -21,27 +22,39 @@ help:
 	@echo
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+.env.dev: # Generate development .env
+	@cp env/base.env .env
+	@echo "" >> .env
+	@cat env/development.env >> .env
+
+.env.prod: # Generate production .env
+ifndef POSTGRES_PASSWORD
+	$(error POSTGRES_PASSWORD environment variable not set)
+endif
+	@cp env/base.env .env
+	@echo "" >> .env
+	@echo "# Production environment variables" >> .env
+	@echo "DOMAIN=${DOMAIN}" >> .env
+	@echo "DOCKER_IMAGE_BACKEND=${DOCKER_IMAGE_BACKEND}" >> .env
+	@echo "DOCKER_IMAGE_FRONTEND=${DOCKER_IMAGE_FRONTEND}" >> .env
+	@echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env
+
+
 dev:		## Start the application in development mode using docker-compose
+dev: .env.dev
 	docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose.development.yml \
 		up --build --detach
 
-deploy:
-	docker-compose -f docker-compose.test.yml pull
-	docker-compose -f docker-compose.test.yml up --detach
-
 $(TRAEFIK_PUBLIC_NETWORK): # Create the network
 	@docker network create $(TRAEFIK_PUBLIC_NETWORK) || \
 		echo "> $(TRAEFIK_PUBLIC_NETWORK) network already exist."
 
-up:			## Start the application in production mode using docker-compose
-up: $(TRAEFIK_PUBLIC_NETWORK)
-	cd $(FRONTEND_DIR) && docker build -t $(DOCKER_IMAGE_FRONTEND) .
-	cd $(BACKEND_DIR) && docker build -t $(DOCKER_IMAGE_BACKEND) .
-	DOCKER_IMAGE_FRONTEND=$(DOCKER_IMAGE_FRONTEND) \
-	DOCKER_IMAGE_BACKEND=$(DOCKER_IMAGE_BACKEND) \
-	docker-compose up -d
+deploy: 	## Start the app in production mode
+deploy: .env.prod $(TRAEFIK_PUBLIC_NETWORK)
+	docker-compose pull
+	docker-compose up --detach
 
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend

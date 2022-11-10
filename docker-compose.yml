@@ -2,50 +2,32 @@ version: "3.6"
 services:
 
   proxy:
-    image: traefik:v2.2
+    image: traefik:v2.9
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command:
-      # Enable Docker in Traefik, so that it reads labels from Docker services
-      - --providers.docker
-      # Add a constraint to only use services with the label for this stack
-      # from the env var TRAEFIK_TAG
-      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
-      # Do not expose all Docker services, only the ones explicitly exposed
-      - --providers.docker.exposedbydefault=false
-      # Enable the Traefik log, for configurations and errors
-      - --log
-      # Enable the Dashboard and API
-      - --api
-      # Create an entrypoint "http" listening on port 80
-      - --entrypoints.web.address=:80
-      # Create an entrypoint "https" listening on port 443
-      - --entrypoints.websecure.address=:443
+      - certificate:/letsencrypt
     ports:
-      - "80:80"
-      - "8080:8080"
-    labels:
-      - traefik.enable=true
-      # Use the traefik-public network (declared below)
-      - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      # Handle host with and without "www" to redirect to only one of them
-      # Uses environment variable DOMAIN
-      # To disable www redirection remove the Host() you want to discard, here and
-      # below for HTTPS
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.entrypoints=web
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.middlewares=https-redirect
-      # traefik-https the actual router using HTTPS
-      # Uses the environment variable DOMAIN
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.entrypoints=websecure
-      - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.tls=true
-      # Define the port inside of the Docker service to use
-      - traefik.http.services.${STACK_NAME?Variable not set}-proxy.loadbalancer.server.port=8080
-
+      - 443:443
+      - 8080:8080
+    command:
+      # Use DEBUG for verbose-level logs
+      - --log.level=WARN
+      # Enable the dashboard API
+      - --api
+      # Use docker (in compose mode)
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      # Constraint to only use services with the label TRAEFIK_TAG
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
+      # Use HTTPS (port 443) as entrypoint
+      - --entrypoints.websecure.address=:443
+      # Certificate resolver: Use letsencrypt with TLS challenge
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --certificatesresolvers.le.acme.email=${EMAIL?Variable not set}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
 
   db:
     image: postgres:12
@@ -60,7 +42,7 @@ services:
     image: rabbitmq:3
 
   celeryworker:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
     depends_on:
       - db
       - queue
@@ -74,7 +56,7 @@ services:
     command: start_worker
 
   backend:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
     user: ${USER?User not set}
     depends_on:
       - db
@@ -84,25 +66,40 @@ services:
       - SERVER_NAME=${DOMAIN?Variable not set}
       - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
-      # - SMTP_HOST=${SMTP_HOST}
+      - SMTP_HOST=${SMTP_HOST}
     labels:
+      # Enable Traefik proxy
       - traefik.enable=true
-      - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+      # Service is served on port 80
+      - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
+      # Setup router
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=Host(`${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.entrypoints=websecure
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.tls.certresolver=le
 
   frontend:
-    image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
+    image: ${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}
+    env_file:
+      - .env
     environment:
       - SERVER_HOST=https://${DOMAIN?Variable not set}
     labels:
+      # Enable Traefik proxy
       - traefik.enable=true
-      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
+      # Service is served on port 80
+      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
+      # Setup router
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=Host(`${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=PathPrefix(`/`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.entrypoints=websecure
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.tls.certresolver=le
 
 volumes:
   app-db-data:
+  certificate:
 
 networks:
   traefik-public:
