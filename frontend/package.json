@@ -15,6 +15,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
+    "axios": "^1.1.3",
     "eslint-config-prettier": "^8.5.0",
     "postcss": "latest",
     "prettier": "^2.7.1",

@@ -9,7 +9,8 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import AppBar from "./components/AppBar"
 import SchoolsPage from "./components/SchoolsPage"
-import School from "./models/School"
+import {ISchool} from "./models/School"
+import {api} from "./core/api"
 
 /**
  * Copyright element
@@ -25,23 +26,46 @@ function Copyright(): JSX.Element {
   )
 }
 
-const mockSchools = [
-  new School("INSA Lyon", "Ecole d'ingénieur", "https://insa-lyon.fr"),
-  new School("KTH", "Ecole d'ingénieur en Suède", "https://kth.se"),
-]
+interface AppState {
+  schools: ISchool[]
+  fetching: boolean
+}
 
 /**
  * Builds the app-level element
  * @returns Element containing the main content
  */
-export default function App(): JSX.Element {
-  return (
-    <Container className="p-0 h-screen flex flex-col" maxWidth={false}>
-      <AppBar title="Schools" />
-      <Container className="p-0 flex-1">
-        <SchoolsPage schools={mockSchools} />
+export default class App extends React.Component<{}, AppState> {
+  state: AppState = {
+    schools: [],
+    fetching: true,
+  }
+
+  componentDidMount(): void {
+    console.log("Fetching schools...")
+    api
+      .getSchools()
+      .then((schools) => {
+        this.setState({schools, fetching: false})
+      })
+      .catch((error) => {
+        console.warn("Error while fetching schools:", error)
+        this.setState({...this.state, fetching: false})
+      })
+  }
+
+  render(): JSX.Element {
+    return (
+      <Container className="p-0 h-screen flex flex-col" maxWidth={false}>
+        <AppBar title="Schools" />
+        <Container className="p-0 flex-1">
+          <SchoolsPage
+            schools={this.state.schools}
+            loading={this.state.fetching}
+          />
+        </Container>
+        <Copyright />
       </Container>
-      <Copyright />
-    </Container>
-  )
+    )
+  }
 }
