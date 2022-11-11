@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+      - 10-rocket-deploy-the-project
 jobs:
-  Push-docker-images:
+  Deploy:
     runs-on: ubuntu-latest
-    name: Push docker images
+    name: Deploy
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -15,4 +16,7 @@ jobs:
         run: make push
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
+      - name: Deploy website on EC2
+        run: make ssh_deploy
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}

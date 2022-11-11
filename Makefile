@@ -14,6 +14,9 @@ DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 TRAEFIK_PUBLIC_NETWORK=traefik-public
 DOMAIN=mandin.dev
 
+SSH_USER=deployer
+DEPLOYEMENT_REF=main
+
 all: up
 
 help: 		## Display help message
@@ -52,9 +55,31 @@ $(TRAEFIK_PUBLIC_NETWORK): # Create the network
 		echo "> $(TRAEFIK_PUBLIC_NETWORK) network already exist."
 
 deploy: 	## Start the app in production mode
-deploy: .env.prod $(TRAEFIK_PUBLIC_NETWORK)
+deploy: .env.prod $(TRAEFIK_PUBLIC_NETWORK) stop
 	docker-compose pull
 	docker-compose up --detach
+
+known_hosts:
+	ssh-keyscan -H mandin.dev > known_hosts
+
+ssh_key: # Note: SSH_KEY must be the rsa ssh key with new lines (\n) replaced by #
+ifndef SSH_KEY
+	$(error SSH_KEY must be defined. It is the private key to use in order to login via SSH)
+endif
+	touch ssh_key
+	chmod 600 ssh_key
+	echo "$(SSH_KEY)" | sed -r 's/#/\n/g' >> ssh_key
+	chmod 400 ssh_key
+
+ssh_deploy:	## Connect via SSH to the deployment device and deploy the latest version of the app
+ssh_deploy: known_hosts ssh_key
+	ssh -o UserKnownHostsFile=$(shell pwd)/known_hosts \
+		-i ssh_key \
+		$(SSH_USER)@$(DOMAIN) \
+			cd /home/${SSH_USER}/skillect \
+			&& git fetch -p \
+			&& git reset --hard origin/$(DEPLOYEMENT_REF) \
+			&& make deploy
 
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend
