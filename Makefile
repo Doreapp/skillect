@@ -66,7 +66,8 @@ endif
 	@echo Logging in
 	@echo "$(DOCKER_PASSWORD)" | docker login --username $(DOCKER_USER) --password-stdin
 	@echo Building images
-	cd $(FRONTEND_DIR) && docker build -t $(DOCKER_IMAGE_FRONTEND):latest .
+	cd $(FRONTEND_DIR) && docker build \
+		--build-arg URL=https://${DOMAIN} -t $(DOCKER_IMAGE_FRONTEND):latest .
 	cd $(BACKEND_DIR) && docker build -t $(DOCKER_IMAGE_BACKEND):latest .
 	@echo Tagging the images
 	$(eval TODAY=$(shell date +%Y-%m-%d-%H-%M)) \

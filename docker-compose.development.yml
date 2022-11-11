@@ -34,6 +34,7 @@ services:
   backend:
     build:
       context: ./backend
+    user: ${USER?User not set}
     volumes:
       - ./backend/app:/work/app
     environment:

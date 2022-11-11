@@ -4,7 +4,7 @@
 import axios from "axios"
 import {ISchool} from "../models/School"
 
-const API_URL = `/api/v1`
+const API_URL = `${process.env.REACT_APP_URL ?? "http://localhost"}/api/v1`
 
 /**
  * API object, to make request on backend server

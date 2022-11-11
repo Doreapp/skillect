@@ -57,7 +57,6 @@ services:
 
   backend:
     image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
-    user: ${USER?User not set}
     depends_on:
       - db
     env_file:

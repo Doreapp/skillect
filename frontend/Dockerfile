@@ -17,6 +17,12 @@ RUN chown -R node:node /app/ /.npm/ \
  && chmod -R 777 /app/ /.npm/
 USER node
 
+# Build arguments:
+#   - URL: protocol and host
+# Note: For React to get an env variable, it must be prefixed by `REACT_APP_`
+ARG URL=http://localhost
+ENV REACT_APP_URL=${URL}
+
 # Install the libraries and build the project
 RUN npm install \
  && npm run build
