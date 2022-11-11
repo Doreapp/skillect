@@ -14,7 +14,7 @@ export const api = {
    * Get all the schools
    */
   async getSchools(): Promise<ISchool[]> {
-    const response = await axios.get<ISchool[]>(`${API_URL}/school`)
+    const response = await axios.get<ISchool[]>(`${API_URL}/school/`)
     return response.data
   },
 }
