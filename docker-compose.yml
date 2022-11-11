@@ -73,8 +73,7 @@ services:
       # Service is served on port 80
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
       # Setup router
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=Host(`${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=Host(`${DOMAIN?Variable not set}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend.entrypoints=websecure
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend.tls.certresolver=le
 
@@ -91,8 +90,7 @@ services:
       # Service is served on port 80
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
       # Setup router
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=Host(`${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=PathPrefix(`/`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.entrypoints=websecure
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.tls.certresolver=le
 
