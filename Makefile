@@ -15,7 +15,8 @@ TRAEFIK_PUBLIC_NETWORK=traefik-public
 DOMAIN=mandin.dev
 
 SSH_USER=deployer
-DEPLOYEMENT_REF=main
+#DEPLOYEMENT_REF=main
+DEPLOYEMENT_REF=10-rocket-deploy-the-project
 
 all: up
 
