@@ -77,10 +77,11 @@ ssh_deploy: known_hosts ssh_key
 	ssh -o UserKnownHostsFile=$(shell pwd)/known_hosts \
 		-i ssh_key \
 		$(SSH_USER)@$(DOMAIN) \
-			cd /home/${SSH_USER}/skillect \
+			"cd /home/${SSH_USER}/skillect \
 			&& git fetch -p \
 			&& git reset --hard origin/$(DEPLOYEMENT_REF) \
-			&& make deploy
+			&& make deploy \
+				POSTGRES_PASSWORD=$(POSTGRES_PASSWORD)"
 
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend
