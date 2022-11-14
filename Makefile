@@ -1,13 +1,15 @@
 USER=$(shell id -u):$(shell id -g)
 
+PROJECT_NAME=skillect
+
 BACKEND_DIR=backend
 FRONTEND_DIR=frontend
 MAKE_BACKEND=make --directory=$(BACKEND_DIR)
 MAKE_FRONTEND=make --directory=$(FRONTEND_DIR)
 
 DOCKER_USER=antoinemdn
-DOCKER_REPO_FRONTEND=skillect-frontend
-DOCKER_REPO_BACKEND=skillect-backend
+DOCKER_REPO_FRONTEND=$(PROJECT_NAME)-frontend
+DOCKER_REPO_BACKEND=$(PROJECT_NAME)-backend
 DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
 DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 
@@ -60,7 +62,7 @@ deploy: .env.prod $(TRAEFIK_PUBLIC_NETWORK) stop
 	docker-compose up --detach
 
 known_hosts:
-	ssh-keyscan -H mandin.dev > known_hosts
+	ssh-keyscan -H $(DOMAIN) > known_hosts
 
 ssh_key: # Note: SSH_KEY must be the rsa ssh key with new lines (\n) replaced by #
 ifndef SSH_KEY
@@ -73,10 +75,10 @@ endif
 
 ssh_deploy:	## Connect via SSH to the deployment device and deploy the latest version of the app
 ssh_deploy: known_hosts ssh_key
-	ssh -o UserKnownHostsFile=$(shell pwd)/known_hosts \
+	ssh -o UserKnownHostsFile=known_hosts \
 		-i ssh_key \
 		$(SSH_USER)@$(DOMAIN) \
-			"cd /home/${SSH_USER}/skillect \
+			"cd /home/${SSH_USER}/$(PROJECT_NAME) \
 			&& git fetch -p \
 			&& git reset --hard origin/$(DEPLOYEMENT_REF) \
 			&& make deploy \
