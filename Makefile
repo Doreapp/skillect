@@ -13,6 +13,9 @@ DOCKER_REPO_BACKEND=$(PROJECT_NAME)-backend
 DOCKER_IMAGE_FRONTEND=$(DOCKER_USER)/$(DOCKER_REPO_FRONTEND)
 DOCKER_IMAGE_BACKEND=$(DOCKER_USER)/$(DOCKER_REPO_BACKEND)
 
+DOCKER_COMPOSE_DEVELOPMENT=docker-compose -f docker-compose.yml -f docker-compose.development.yml
+DOCKER_COMPOSE_PRODUCTION=docker-compose -f docker-compose.yml -f docker-compose.production.yml
+
 TRAEFIK_PUBLIC_NETWORK=traefik-public
 DOMAIN=mandin.dev
 
@@ -47,9 +50,7 @@ endif
 
 dev:		## Start the application in development mode using docker-compose
 dev: .env.dev
-	docker-compose \
-		-f docker-compose.yml \
-		-f docker-compose.development.yml \
+	$(DOCKER_COMPOSE_DEVELOPMENT) \
 		up --build --detach
 
 $(TRAEFIK_PUBLIC_NETWORK): # Create the network
@@ -58,8 +59,8 @@ $(TRAEFIK_PUBLIC_NETWORK): # Create the network
 
 deploy: 	## Start the app in production mode
 deploy: .env.prod $(TRAEFIK_PUBLIC_NETWORK) stop
-	docker-compose pull
-	docker-compose up --detach
+	$(DOCKER_COMPOSE_PRODUCTION) pull
+	$(DOCKER_COMPOSE_PRODUCTION) up --detach
 
 known_hosts:
 	ssh-keyscan -H $(DOMAIN) > known_hosts

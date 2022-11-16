@@ -1,3 +1,4 @@
+# Basis for docker-compose. Shared between development and production configuration.
 version: "3.6"
 services:
 
@@ -8,26 +9,8 @@ services:
       - default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - certificate:/letsencrypt
     ports:
-      - 443:443
       - 8080:8080
-    command:
-      # Use DEBUG for verbose-level logs
-      - --log.level=WARN
-      # Enable the dashboard API
-      - --api
-      # Use docker (in compose mode)
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      # Constraint to only use services with the label TRAEFIK_TAG
-      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
-      # Use HTTPS (port 443) as entrypoint
-      - --entrypoints.websecure.address=:443
-      # Certificate resolver: Use letsencrypt with TLS challenge
-      - --certificatesresolvers.le.acme.tlschallenge=true
-      - --certificatesresolvers.le.acme.email=${EMAIL?Variable not set}
-      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
 
   db:
     image: postgres:12
@@ -50,7 +33,6 @@ services:
       - .env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST?Variable not set}
     command: start_worker
@@ -63,43 +45,28 @@ services:
       - .env
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST}
     labels:
       # Enable Traefik proxy
       - traefik.enable=true
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      # Service is served on port 80
-      - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
       # Setup router
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend.rule=Host(`${DOMAIN?Variable not set}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.entrypoints=websecure
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend.tls.certresolver=le
 
   frontend:
     image: ${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}
     env_file:
       - .env
-    environment:
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
     labels:
       # Enable Traefik proxy
       - traefik.enable=true
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      # Service is served on port 80
-      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
       # Setup router
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.entrypoints=websecure
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend.tls.certresolver=le
 
 volumes:
   app-db-data:
-  certificate:
 
 networks:
   traefik-public:
     # Allow setting it to false for testing
     external: ${TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL-true}
-
