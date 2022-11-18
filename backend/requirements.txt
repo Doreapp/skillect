@@ -4,6 +4,8 @@ sqlalchemy==1.4.42
 psycopg2-binary==2.9.5
 uvicorn[standard]==0.15.0
 gunicorn==20.1.0
+emails==0.6
+python-jose[cryptography]==3.3.0
 
 # Requirements for the celery worker
 raven==6.10.0
