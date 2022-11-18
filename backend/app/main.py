@@ -8,7 +8,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .api.v1 import get_api_router
 from .core.config import SETTINGS
 
-LOGGER = logging.getLogger("uvicorn.error")
+LOGGER = logging.getLogger(__name__)
 LOGGER.info("Starting the server")
 
 # 'app' will be found by gunicorn
