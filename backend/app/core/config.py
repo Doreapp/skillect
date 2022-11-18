@@ -1,7 +1,7 @@
 """App configuration"""
 
 import secrets
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 # pylint is unable to fetch the names from pydantic
 # pylint: disable=no-name-in-module
@@ -20,6 +20,18 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
+
+    # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+
+    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, value: Union[str, List[str]]) -> Union[List[str], str]:
+        """Validator of BACKEND_CORS_ORIGINS"""
+        if isinstance(value, str) and not value.startswith("["):
+            return [i.strip() for i in value.split(",")]
+        if isinstance(value, (list, str)):
+            return value
+        raise ValueError(value)
 
     PROJECT_NAME: str
     SENTRY_DSN: Optional[HttpUrl] = None
