@@ -46,6 +46,7 @@ endif
 	@echo "DOCKER_IMAGE_BACKEND=${DOCKER_IMAGE_BACKEND}" >> .env
 	@echo "DOCKER_IMAGE_FRONTEND=${DOCKER_IMAGE_FRONTEND}" >> .env
 	@echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env
+	@echo "BACKEND_CORS_ORIGINS=["https://${DOMAIN}"]" >> .env
 
 
 dev:		## Start the application in development mode using docker-compose
