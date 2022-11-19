@@ -24,7 +24,7 @@ FIRST_SUPERUSER=$(DEFAULT_SUPERUSER)
 SSH_USER=deployer
 DEPLOYEMENT_REF=main
 
-all: up
+all: deploy
 
 help: 		## Display help message
 help:
