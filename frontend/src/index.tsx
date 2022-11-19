@@ -14,6 +14,7 @@ import {
 import {CssBaseline} from "@mui/material"
 import "./index.css"
 import App from "./App"
+import {BrowserRouter} from "react-router-dom"
 
 const rootElement = document.getElementById("root")
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -55,7 +56,9 @@ root.render(
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>
