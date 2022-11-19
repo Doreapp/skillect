@@ -5,3 +5,4 @@
 # pylint: disable=unused-import
 from app.db.base_class import Base
 from app.models.school import School
+from app.models.user import User
