@@ -13,6 +13,8 @@ from app.core.config import SETTINGS
 
 LOGGER = logging.getLogger(__name__)
 
+HASHING_ALGORITHM = "HS256"
+
 
 def send_email(
     email_to: str,
@@ -109,7 +111,7 @@ def generate_password_reset_token(email: str) -> str:
     encoded_jwt = jwt.encode(
         {"exp": exp, "nbf": now, "sub": email},
         SETTINGS.SECRET_KEY,
-        algorithm="HS256",
+        algorithm=HASHING_ALGORITHM,
     )
     return encoded_jwt
 
