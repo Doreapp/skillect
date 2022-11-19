@@ -14,6 +14,7 @@ import * as React from "react"
 import {ISchool} from "../models/School"
 import {api} from "../core/api"
 import AddIcon from "@mui/icons-material/Add"
+import Page from "./Page"
 
 export interface SchoolsPageState {
   schools: ISchool[]
@@ -102,9 +103,11 @@ export default function SchoolsPage(): JSX.Element {
   }
 
   return (
-    <List>
-      {items}
-      {AddButton()}
-    </List>
+    <Page title="Schools">
+      <List>
+        {items}
+        {AddButton()}
+      </List>
+    </Page>
   )
 }
