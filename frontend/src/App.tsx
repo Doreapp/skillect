@@ -7,6 +7,7 @@
 import * as React from "react"
 import SchoolsPage from "./pages/Schools"
 import LoginPage from "./pages/Login"
+import HomePage from "./pages/Home"
 import {Routes, Route} from "react-router-dom"
 import AuthProvider from "./components/Auth/Provider"
 
@@ -20,6 +21,7 @@ export default class App extends React.Component<{}, {}> {
       <AuthProvider>
         <Routes>
           <Route path="/">
+            <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="school" element={<SchoolsPage />} />
           </Route>
