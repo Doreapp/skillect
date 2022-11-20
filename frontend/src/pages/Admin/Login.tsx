@@ -15,7 +15,7 @@ import {
 } from "@mui/material"
 import * as React from "react"
 import Page from "./Page"
-import {useAuth} from "../components/Auth/Provider"
+import {useAuth} from "../../components/Auth/Provider"
 import {useLocation, useNavigate} from "react-router-dom"
 
 /**
@@ -73,7 +73,7 @@ export default function LoginPage(): JSX.Element {
   const authContext = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
-  const from = location.state?.from?.pathname ?? "/"
+  const from = location.state?.from?.pathname ?? "/admin/"
 
   React.useEffect(() => {
     // Check if user is already connected

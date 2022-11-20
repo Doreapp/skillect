@@ -11,8 +11,8 @@ import {
   Skeleton,
 } from "@mui/material"
 import * as React from "react"
-import {ISchool} from "../models/School"
-import {api} from "../core/api"
+import {ISchool} from "../../models/School"
+import {api} from "../../core/api"
 import AddIcon from "@mui/icons-material/Add"
 import Page from "./Page"
 

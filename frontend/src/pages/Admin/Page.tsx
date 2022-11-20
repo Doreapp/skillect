@@ -1,10 +1,10 @@
 /**
- * Base page
+ * Base admin page
  */
 
 import {Container, Typography} from "@mui/material"
-import AppBar from "../components/AppBar"
-import RequireAuth from "../components/Auth/RequireAuth"
+import AppBar from "../../components/AppBar"
+import RequireAuth from "../../components/Auth/RequireAuth"
 import * as React from "react"
 
 /**

@@ -5,11 +5,9 @@
  */
 
 import * as React from "react"
-import SchoolsPage from "./pages/Schools"
-import LoginPage from "./pages/Login"
+import adminRouter from "./pages/Admin"
 import HomePage from "./pages/Home"
 import {Routes, Route} from "react-router-dom"
-import AuthProvider from "./components/Auth/Provider"
 
 /**
  * Builds the app-level element
@@ -18,15 +16,12 @@ import AuthProvider from "./components/Auth/Provider"
 export default class App extends React.Component<{}, {}> {
   render(): JSX.Element {
     return (
-      <AuthProvider>
-        <Routes>
-          <Route path="/">
-            <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="school" element={<SchoolsPage />} />
-          </Route>
-        </Routes>
-      </AuthProvider>
+      <Routes>
+        <Route path="/">
+          <Route index element={<HomePage />} />
+          {adminRouter()}
+        </Route>
+      </Routes>
     )
   }
 }
