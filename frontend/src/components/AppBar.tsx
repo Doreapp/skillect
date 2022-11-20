@@ -25,15 +25,16 @@ export interface AppBarProps {
 
 function userElement(): JSX.Element | undefined {
   const authContext = useAuth()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const navigate = useNavigate()
+
   if (authContext == null || authContext.user === undefined) {
     return
   }
-  const navigate = useNavigate()
   let userText = `${authContext.user.email}`
   if (authContext.user.is_superuser) {
     userText += " (admin)"
   }
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget)

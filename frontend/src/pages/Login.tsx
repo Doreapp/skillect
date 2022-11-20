@@ -75,6 +75,13 @@ export default function LoginPage(): JSX.Element {
   const navigate = useNavigate()
   const from = location.state?.from?.pathname ?? "/"
 
+  React.useEffect(() => {
+    // Check if user is already connected
+    if (authContext?.user !== undefined) {
+      navigate(from, {replace: true})
+    }
+  })
+
   // Submit handler, request /login endpoint
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()

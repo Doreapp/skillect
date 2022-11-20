@@ -4,7 +4,11 @@
 
 import * as React from "react"
 import {api} from "../../core/api"
-import {saveLocalToken, removeLocalToken} from "../../core/storage"
+import {
+  saveLocalToken,
+  removeLocalToken,
+  getLocalToken,
+} from "../../core/storage"
 import {IUser} from "../../models/User"
 
 /**
@@ -39,7 +43,9 @@ interface Props {
  * @returns Element
  */
 export default function AuthProvider(props: Props): JSX.Element {
-  const [user, setUser] = React.useState<IUser | undefined>(undefined)
+  const [state, setState] = React.useState<{user?: IUser; retrieving: boolean}>(
+    {retrieving: true}
+  )
 
   /**
    * Login function
@@ -59,7 +65,7 @@ export default function AuthProvider(props: Props): JSX.Element {
     if (user === null) {
       return false
     }
-    setUser(user)
+    setState({...state, user})
     saveLocalToken(token)
     return true
   }
@@ -68,11 +74,35 @@ export default function AuthProvider(props: Props): JSX.Element {
    * Logout
    */
   const logout = async (): Promise<void> => {
-    setUser(undefined)
+    setState({...state, user: undefined})
     removeLocalToken()
   }
 
-  const value = {user, login, logout}
+  // Check token saved in local storage
+  React.useEffect(() => {
+    if (!state.retrieving) {
+      return
+    }
+    const token = getLocalToken()
+    if (token !== null) {
+      api
+        .getMe(token)
+        .then((user) => {
+          if (user === null || !user.is_active) {
+            removeLocalToken()
+          }
+          setState({user: user ?? undefined, retrieving: false})
+        })
+        .catch((_) => {
+          removeLocalToken()
+          setState({...state, retrieving: false})
+        })
+    } else {
+      setState({...state, retrieving: false})
+    }
+  })
+
+  const value = {user: state.user, login, logout}
 
   return <context.Provider value={value}>{props.children}</context.Provider>
 }
