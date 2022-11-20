@@ -18,11 +18,27 @@ import Page from "./Page"
 import {useAuth} from "../components/Auth/Provider"
 import {useLocation, useNavigate} from "react-router-dom"
 
+/**
+ * Build a text field for the form
+ * @param name Name of the field
+ * @param label Label describing the field
+ * @param missing whether the field is missing (and required)
+ * @param props Additional props
+ * @returns TextField
+ */
 function field(
   name: string,
   label: string,
+  missing: boolean,
   props: TextFieldProps
 ): JSX.Element {
+  let additional
+  if (missing) {
+    additional = {
+      error: true,
+      helperText: `${label} missing`,
+    }
+  }
   return (
     <TextField
       margin="normal"
@@ -31,6 +47,7 @@ function field(
       id={name}
       label={label}
       name={name}
+      {...additional}
       {...props}
     />
   )
@@ -38,7 +55,8 @@ function field(
 
 interface State {
   error?: string
-  warning?: string
+  missingEmail: boolean
+  missionPassword: boolean
 }
 
 /**
@@ -48,7 +66,8 @@ interface State {
 export default function LoginPage(): JSX.Element {
   const [state, setState] = React.useState<State>({
     error: undefined,
-    warning: undefined,
+    missingEmail: false,
+    missionPassword: false,
   })
 
   const authContext = useAuth()
@@ -68,14 +87,15 @@ export default function LoginPage(): JSX.Element {
     const email = data.get("email")
     const password = data.get("password")
 
-    if (email == null || typeof email !== "string") {
-      setState({...state, error: "Email field is required."})
+    if (email == null || typeof email !== "string" || email === "") {
+      setState({...state, missingEmail: true})
       return
     }
-    if (password == null || typeof password !== "string") {
-      setState({...state, error: "Password field is required."})
+    if (password == null || typeof password !== "string" || password === "") {
+      setState({...state, missingEmail: false, missionPassword: true})
       return
     }
+    setState({...state, missingEmail: false, missionPassword: false})
 
     authContext
       .login(email, password)
@@ -110,11 +130,12 @@ export default function LoginPage(): JSX.Element {
           className="max-w-md">
           <h3>Sign in</h3>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-            {field("email", "Email Address", {
+            {field("email", "Email Address", state.missingEmail, {
               autoComplete: "email",
               autoFocus: true,
             })}
-            {field("password", "Password", {
+            {field("password", "Password", state.missionPassword, {
+              type: "password",
               autoComplete: "current-password",
             })}
             <FormControlLabel
