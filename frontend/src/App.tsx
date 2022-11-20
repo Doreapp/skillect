@@ -5,7 +5,7 @@
  */
 
 import * as React from "react"
-import SchoolsPage from "./pages/SchoolsPage"
+import SchoolsPage from "./pages/Schools"
 import {Routes, Route} from "react-router-dom"
 
 /**
