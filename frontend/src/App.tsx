@@ -20,8 +20,8 @@ export default class App extends React.Component<{}, {}> {
       <AuthProvider>
         <Routes>
           <Route path="/">
-            <Route path="school" element={<SchoolsPage />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="school" element={<SchoolsPage />} />
           </Route>
         </Routes>
       </AuthProvider>

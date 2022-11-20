@@ -16,6 +16,7 @@ import {
 import * as React from "react"
 import Page from "./Page"
 import {useAuth} from "../components/Auth/Provider"
+import {useLocation, useNavigate} from "react-router-dom"
 
 function field(
   name: string,
@@ -51,6 +52,9 @@ export default function LoginPage(): JSX.Element {
   })
 
   const authContext = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const from = location.state?.from?.pathname ?? "/"
 
   // Submit handler, request /login endpoint
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -75,8 +79,12 @@ export default function LoginPage(): JSX.Element {
 
     authContext
       .login(email, password)
-      .then((result) => {
-        console.log(`Logged in with email ${email}`)
+      .then((success) => {
+        if (success) {
+          navigate(from, {replace: true})
+        } else {
+          setState({...state, error: "Signin failed."})
+        }
       })
       .catch((error) => {
         console.warn("Unable to login", error)

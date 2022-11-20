@@ -103,7 +103,7 @@ export default function SchoolsPage(): JSX.Element {
   }
 
   return (
-    <Page title="Schools">
+    <Page title="Schools" requireLogin={true}>
       <List>
         {items}
         {AddButton()}
