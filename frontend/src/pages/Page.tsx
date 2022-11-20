@@ -26,7 +26,7 @@ export default function Page({
 }: PageProps): JSX.Element {
   const mainContent = (
     <Container className="p-0 h-screen flex flex-col" maxWidth={false}>
-      <AppBar title={title} />
+      <AppBar title={title} showUser={true} />
       <Container className="p-0 flex-1">{children}</Container>
       <Typography variant="body2" color="text.secondary" align="center">
         {"Copyright © "}

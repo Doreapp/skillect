@@ -5,12 +5,13 @@
 import * as React from "react"
 import {api} from "../../core/api"
 import {saveLocalToken, removeLocalToken} from "../../core/storage"
+import {IUser} from "../../models/User"
 
 /**
  * AuthContext type
  */
 interface AuthContextType {
-  loggedIn: boolean
+  user?: IUser
   login: (username: string, password: string) => Promise<boolean>
   logout: () => Promise<void>
 }
@@ -38,7 +39,7 @@ interface Props {
  * @returns Element
  */
 export default function AuthProvider(props: Props): JSX.Element {
-  const [loggedIn, setLoggedIn] = React.useState<boolean>(false)
+  const [user, setUser] = React.useState<IUser | undefined>(undefined)
 
   /**
    * Login function
@@ -54,7 +55,11 @@ export default function AuthProvider(props: Props): JSX.Element {
     if (token === undefined) {
       return false
     }
-    setLoggedIn(true)
+    const user = await api.getMe(token)
+    if (user === null) {
+      return false
+    }
+    setUser(user)
     saveLocalToken(token)
     return true
   }
@@ -63,11 +68,11 @@ export default function AuthProvider(props: Props): JSX.Element {
    * Logout
    */
   const logout = async (): Promise<void> => {
-    setLoggedIn(false)
+    setUser(undefined)
     removeLocalToken()
   }
 
-  const value = {loggedIn, login, logout}
+  const value = {user, login, logout}
 
   return <context.Provider value={value}>{props.children}</context.Provider>
 }

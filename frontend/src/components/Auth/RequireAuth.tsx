@@ -16,7 +16,7 @@ export default function RequireAuth(props: Props): JSX.Element {
   const auth = useAuth()
   const location = useLocation()
 
-  if (auth == null || !auth.loggedIn) {
+  if (auth == null || auth.user === undefined) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
