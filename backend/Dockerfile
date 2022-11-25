@@ -11,6 +11,7 @@ RUN mkdir /work/ /work/venv \
 WORKDIR /work/
 
 # Python configuration
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV VIRTUAL_ENV=/work/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ADD requirements.txt requirements-dev.txt /work/
