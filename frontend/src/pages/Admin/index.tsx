@@ -12,7 +12,7 @@ import AuthProvider from "../../components/Auth/Provider"
 /**
  * Admin pages router
  */
-export default function adminRouter(): JSX.Element {
+export default function AdminRouter(): JSX.Element {
   const layout = (
     <AuthProvider>
       <Outlet />
