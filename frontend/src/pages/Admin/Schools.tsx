@@ -17,8 +17,7 @@ import AddIcon from "@mui/icons-material/Add"
 import Page from "./Page"
 
 export interface SchoolsPageState {
-  schools: ISchool[]
-  loading: boolean
+  schools?: ISchool[]
   tried: boolean
 }
 
@@ -63,8 +62,7 @@ function listItem(
 }
 export default function SchoolsPage(): JSX.Element {
   const [state, setState] = React.useState<SchoolsPageState>({
-    schools: [],
-    loading: true,
+    schools: undefined,
     tried: false,
   })
 
@@ -76,16 +74,16 @@ export default function SchoolsPage(): JSX.Element {
     api
       .getSchools()
       .then((schools) => {
-        setState({schools, loading: false, tried: true})
+        setState({schools, tried: true})
       })
       .catch((error) => {
         console.warn("Error while fetching schools:", error)
-        setState({...state, loading: false, tried: true})
+        setState({schools: [], tried: true})
       })
   })
 
   const items = []
-  if (state.schools == null) {
+  if (state.schools === undefined) {
     // Only show a single squeleton element
     items.push(
       listItem(
