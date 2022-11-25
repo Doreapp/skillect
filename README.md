@@ -2,6 +2,10 @@
 
 A Client-Server website, meant to store and display experiences and skills.
 
+**🎉🌐 Website:** [`https://mandin.dev`](https://mandin.dev).
+
+**📝 Documentation:** [`https://doreapp.github.io/skillect`](https://doreapp.github.io/skillect/)
+
 > 💡 Inspired from [full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) project.
 
 ## How to use
