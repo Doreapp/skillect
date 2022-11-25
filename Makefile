@@ -18,11 +18,13 @@ DOCKER_COMPOSE_PRODUCTION=docker-compose -f docker-compose.yml -f docker-compose
 
 TRAEFIK_PUBLIC_NETWORK=traefik-public
 DOMAIN=mandin.dev
+DEFAULT_SUPERUSER=admin@$(DOMAIN)
+FIRST_SUPERUSER=$(DEFAULT_SUPERUSER)
 
 SSH_USER=deployer
 DEPLOYEMENT_REF=main
 
-all: up
+all: deploy
 
 help: 		## Display help message
 help:
@@ -39,6 +41,12 @@ help:
 ifndef POSTGRES_PASSWORD
 	$(error POSTGRES_PASSWORD environment variable not set)
 endif
+ifndef FIRST_SUPERUSER_PASSWORD
+	$(error FIRST_SUPERUSER_PASSWORD environment variable not set)
+endif
+ifeq ($(FIRST_SUPERUSER),$(DEFAULT_SUPERUSER))
+	$(warning FIRST_SUPERUSER is set to '$(DEFAULT_SUPERUSER)', consider changing it.)
+endif
 	@cp env/base.env .env
 	@echo "" >> .env
 	@echo "# Production environment variables" >> .env
@@ -47,7 +55,8 @@ endif
 	@echo "DOCKER_IMAGE_FRONTEND=${DOCKER_IMAGE_FRONTEND}" >> .env
 	@echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env
 	@echo "BACKEND_CORS_ORIGINS=["https://${DOMAIN}"]" >> .env
-
+	@echo "FIRST_SUPERUSER=${FIRST_SUPERUSER}" >> .env
+	@echo "FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD}" >> .env
 
 dev:		## Start the application in development mode using docker-compose
 dev: .env.dev

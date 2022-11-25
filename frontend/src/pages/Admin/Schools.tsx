@@ -11,12 +11,14 @@ import {
   Skeleton,
 } from "@mui/material"
 import * as React from "react"
-import {ISchool} from "../models/School"
+import {ISchool} from "../../models/School"
+import {api} from "../../core/api"
 import AddIcon from "@mui/icons-material/Add"
+import Page from "./Page"
 
-export interface SchoolsPageProps {
-  schools: ISchool[]
-  loading: boolean
+export interface SchoolsPageState {
+  schools?: ISchool[]
+  tried: boolean
 }
 
 /**
@@ -58,11 +60,30 @@ function listItem(
     </ListItem>
   )
 }
+export default function SchoolsPage(): JSX.Element {
+  const [state, setState] = React.useState<SchoolsPageState>({
+    schools: undefined,
+    tried: false,
+  })
 
-export default function SchoolsPage(props: SchoolsPageProps): JSX.Element {
+  React.useEffect(() => {
+    if (state.tried) {
+      return
+    }
+    console.log("Fetching schools...")
+    api
+      .getSchools()
+      .then((schools) => {
+        setState({schools, tried: true})
+      })
+      .catch((error) => {
+        console.warn("Error while fetching schools:", error)
+        setState({schools: [], tried: true})
+      })
+  })
+
   const items = []
-
-  if (props.loading) {
+  if (state.schools === undefined) {
     // Only show a single squeleton element
     items.push(
       listItem(
@@ -74,15 +95,17 @@ export default function SchoolsPage(props: SchoolsPageProps): JSX.Element {
     )
   } else {
     let key = 0
-    for (const school of props.schools) {
+    for (const school of state.schools) {
       items.push(listItem(key++, school.name, school.description))
     }
   }
 
   return (
-    <List>
-      {items}
-      {AddButton()}
-    </List>
+    <Page title="Schools" requireLogin={true}>
+      <List>
+        {items}
+        {AddButton()}
+      </List>
+    </Page>
   )
 }

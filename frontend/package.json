@@ -21,6 +21,7 @@
     "prettier": "^2.7.1",
     "react": "latest",
     "react-dom": "latest",
+    "react-router-dom": "^6.4.3",
     "react-scripts": "latest",
     "tailwindcss": "latest",
     "typescript": "latest",

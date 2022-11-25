@@ -24,6 +24,8 @@ services:
   celeryworker:
     build:
       context: ./backend
+    environment:
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
     volumes:
       - ./backend/app:/work/app
 

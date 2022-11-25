@@ -45,6 +45,14 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         return db.query(self.model).offset(skip).limit(limit).all()
 
+    def _put(self, db: Session, obj: ModelType):  # pylint: disable=no-self-use
+        """
+        Put an object in the database and update the instance
+        """
+        db.add(obj)
+        db.commit()
+        db.refresh(obj)
+
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         """
         Create a new resource
@@ -53,9 +61,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+        self._put(db, db_obj)
         return db_obj
 
     def update(
@@ -75,9 +81,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+        self._put(db, db_obj)
         return db_obj
 
     def remove(self, db: Session, *, id: int) -> ModelType:

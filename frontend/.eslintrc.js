@@ -1,4 +1,4 @@
-{
+module.exports = {
     "env": {
         "browser": true,
         "es2021": true
@@ -13,6 +13,7 @@
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module",
+        "tsconfigRootDir": __dirname,
         "project": ["./tsconfig.json"]
     },
     "plugins": [
