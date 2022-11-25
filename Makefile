@@ -4,8 +4,10 @@ PROJECT_NAME=skillect
 
 BACKEND_DIR=backend
 FRONTEND_DIR=frontend
+DOC_DIR=doc
 MAKE_BACKEND=make --directory=$(BACKEND_DIR)
 MAKE_FRONTEND=make --directory=$(FRONTEND_DIR)
+MAKE_DOC=make --directory=$(DOC_DIR)
 
 DOCKER_USER=antoinemdn
 DOCKER_REPO_FRONTEND=$(PROJECT_NAME)-frontend
@@ -23,6 +25,8 @@ FIRST_SUPERUSER=$(DEFAULT_SUPERUSER)
 
 SSH_USER=deployer
 DEPLOYEMENT_REF=main
+
+.PHONY: frontend backend doc
 
 all: deploy
 
@@ -143,3 +147,7 @@ format: 	## Reformat the code of the whole application
 format:
 	$(MAKE_BACKEND) make_format
 	$(MAKE_FRONTEND) format
+
+doc:		## Build HTML documentation
+doc:
+	$(MAKE_DOC) docker_html
