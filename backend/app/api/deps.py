@@ -60,7 +60,7 @@ def get_current_active_user(
     """
     Check that current user is active
 
-    - Raise HTTP 400 (Bad request) if user inactive
+    - Raise HTTP 400 (Bad request) if user is inactive
 
     :param current_user: Authenticated user (given passed token)
     :return: Current and active user
@@ -74,7 +74,7 @@ def get_current_superuser(
     current_user: UserModel = Depends(get_current_user),
 ) -> UserModel:
     """
-    Check that current user if superuser
+    Check that current user is superuser
 
     - Raise HTTP 400 (Bad request) if user isn't superuser
 

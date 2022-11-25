@@ -35,7 +35,7 @@ def get_router() -> APIRouter:
         """
         OAuth2 compatible token login, get an access token for future requests
 
-        - Raise HTTP 400 if email/password incorrect of user inactive
+        - Raise HTTP 400 if the pair email/password is incorrect or the user is inactive
 
         Takes a login form data as input. It must contain `username` and `password`.
 
@@ -55,15 +55,6 @@ def get_router() -> APIRouter:
             ),
             "token_type": "bearer",
         }
-
-    @router.post("/login/test-token", response_model=UserSchema)
-    def test_token(current_user: UserModel = Depends(deps.get_current_user)) -> Any:
-        """
-        Endpoint to the the access token.
-
-        Return the current logged in user
-        """
-        return current_user
 
     @router.post("/password-recovery/{email}", response_model=Msg)
     def recover_password(email: str, db: Session = Depends(deps.get_db)) -> Any:

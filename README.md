@@ -34,7 +34,7 @@ For the *CD* to run as intended, you need to define some *Actions secrets* in Gi
 - `FIRST_SUPERUSER`, email address identifying the initial superuser
 - `FIRST_SUPERUSER_PASSWORD`, password of the first superuser
 - `POSTGRES_PASSWORD`, password to connect to *Postgres* database
-- `SSH_KEY`, RSA ssh key to connect to the deployment target, **With new lines (`\n`) replaces by `#`)**
+- `SSH_KEY`, RSA ssh key to connect to the deployment target, **With new lines (`\n`) replaced by `#`)**
 
 ### Environment variables
 

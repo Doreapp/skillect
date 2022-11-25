@@ -1,4 +1,4 @@
-"""Create, Read, Update and Delete function for users """
+"""Create, Read, Update and Delete functions for users """
 
 from typing import Any, Dict, Optional, Union
 
@@ -52,7 +52,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         Update an existing user
 
         :param db: Database connexion
-        :param db_obj: Object actually stored in the database
+        :param db_obj: Object currently stored in the database
         :param obj_in: Object updated, replacing the `db_obj`
         :return: The updated user
         """

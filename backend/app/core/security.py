@@ -12,7 +12,7 @@ PASSWORD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 """Context for hasing and verifying passwords"""
 
 ALGORITHM = "HS256"
-"""Hashing alogirthm for password"""
+"""Hashing alogirthm for passwords"""
 
 
 def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
@@ -38,7 +38,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
     :param plain_password: Plain text password, to check
     :param hashed_password: Hash to confront
-    :return: Whether the password matchs the hash
+    :return: Whether the password matches the hash
     """
     return PASSWORD_CONTEXT.verify(plain_password, hashed_password)
 
