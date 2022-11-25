@@ -36,11 +36,11 @@ _interactive: # Enter the docker container in interactive mode
 _interactive: build
 	$(DOCKER_RUN) --entrypoint /bin/bash -i $(OPTIONS) -t $(DOCKER_IMAGE)
 
-html:		## Build html version of the documentation
+html:		## Build HTML version of the documentation
 html:
 	sphinx-build -b html $(SRC_DIR) html/
 
-docker_html:	## Build html using docker
+docker_html:	## Build HTML using docker
 docker_html: build
 	mkdir -p $(shell pwd)/html
 	$(DOCKER_RUN) $(OPTIONS) \
@@ -51,3 +51,12 @@ docker_html: build
 serve:		## Serve the HTML documentation
 serve:
 	$(PYTHON) -m http.server -d html $(SERVE_PORT)
+
+docker_serve:	## Serve the HTML documentation using docker
+docker_serve: build
+	mkdir -p $(shell pwd)/html
+	$(DOCKER_RUN) $(OPTIONS) \
+		-v $(shell pwd)/html:/work/html \
+		-p $(SERVE_PORT):$(SERVE_PORT) \
+		-i -t $(DOCKER_IMAGE) \
+		serve
