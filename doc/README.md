@@ -24,5 +24,5 @@ During development, it is recommended to use `docker`. For native development se
 ### Helpful documentation
 
 Sphinx documentation supports reStructuredText format. Here are some helper about the format:
-- [📖 Official reStructuredText documentation] https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
-- [📃 A cheatsheet about rst syntax]
+- [📖 Official reStructuredText documentation](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html)
+- [📃 A cheatsheet about rst syntax](https://docs.generic-mapping-tools.org/6.2/rst-cheatsheet.html)
