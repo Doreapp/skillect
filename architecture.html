@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skillect &mdash; Documentation</title>
+  <title>Architecture &mdash; Documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture" href="architecture.html" /> 
+    <link rel="next" title="Data model" href="data_model.html" />
+    <link rel="prev" title="Skillect" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> Skillect
+            <a href="index.html" class="icon icon-home"> Skillect
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -38,8 +39,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overall-architecture">Overall architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frontend">Frontend</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="data_model.html">Data model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development_environment.html">Software environment</a></li>
 </ul>
@@ -50,17 +56,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Skillect</a>
+          <a href="index.html">Skillect</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Skillect</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/Doreapp/skillect/blob/main/doc/src/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/Doreapp/skillect/blob/main/doc/src/architecture.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -68,47 +74,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="skillect">
-<h1>Skillect<a class="headerlink" href="#skillect" title="Permalink to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#overall-architecture">Overall architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#backend">Backend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#frontend">Frontend</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="data_model.html">Data model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data_model.html#entity-relationship-diagram">Entity-Relationship diagram</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_model.html#descriptions">Descriptions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="development_environment.html">Software environment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#github">GitHub</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#continuous-integration-and-deployment">Continuous Integration and Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#documentation">Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#deployment">Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="development_environment.html#docker">Docker</a></li>
-</ul>
-</li>
-</ul>
-</div>
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading"></a></h1>
+<section id="overall-architecture">
+<h2>Overall architecture<a class="headerlink" href="#overall-architecture" title="Permalink to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The content of the page is under construction.
-Missing</p>
-<ul class="simple">
-<li><p>Description of the overall goal</p></li>
-</ul>
+<p>TODO: client/server with docker compose. Traefik for the proxy…</p>
 </div>
+</section>
+<section id="backend">
+<h2>Backend<a class="headerlink" href="#backend" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TODO Python, fastapi, gunicorn, REST…</p>
+</div>
+</section>
+<section id="frontend">
+<h2>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TODO React, MUI, Tailwind, Ngnix</p>
+</div>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Skillect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_model.html" class="btn btn-neutral float-right" title="Data model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
