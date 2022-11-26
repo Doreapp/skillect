@@ -22,7 +22,7 @@ DEFAULT_SUPERUSER=admin@$(DOMAIN)
 FIRST_SUPERUSER=$(DEFAULT_SUPERUSER)
 
 SSH_USER=deployer
-DEPLOYEMENT_REF=main
+DEPLOYEMENT_REF=18-fix-deployment-failure-due-to-missing-environment-variables
 
 all: deploy
 
