@@ -78,20 +78,25 @@
 <h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading"></a></h1>
 <section id="overall-architecture">
 <h2>Overall architecture<a class="headerlink" href="#overall-architecture" title="Permalink to this heading"></a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>TODO: client/server with docker compose. Traefik for the proxy…</p>
-</div>
+<p><strong>Skillect</strong> webiste uses a client-server architecture.</p>
+<p>The <a class="reference internal" href="#ref-backend"><span class="std std-ref">backend</span></a> serves a secured
+<a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API used by the
+<a class="reference internal" href="#ref-frontend"><span class="std std-ref">frontend</span></a>.</p>
+<p>Both services are under a reverse proxy based on <a class="reference external" href="https://traefik.io/">Traefik</a>.
+It defines the domain name of the website (which is <code class="docutils literal notranslate"><span class="pre">mandin.dev</span></code> here)
+and enables <a class="reference external" href="https://en.wikipedia.org/wiki/HTTPS">HTTPS</a> using <a class="reference external" href="https://letsencrypt.org/">Let’s Encrypt</a> certificate authority.</p>
+<p>Each service is in a <a class="reference external" href="https://www.docker.com/">Docker</a> container.
+The overall network is described in a <a class="reference external" href="https://docs.docker.com/compose/">docker compose</a> configuration.</p>
 </section>
 <section id="backend">
-<h2>Backend<a class="headerlink" href="#backend" title="Permalink to this heading"></a></h2>
+<span id="ref-backend"></span><h2>Backend<a class="headerlink" href="#backend" title="Permalink to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>TODO Python, fastapi, gunicorn, REST…</p>
 </div>
 </section>
 <section id="frontend">
-<h2>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading"></a></h2>
+<span id="ref-frontend"></span><h2>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>TODO React, MUI, Tailwind, Ngnix</p>
