@@ -37,7 +37,7 @@ help:
 	@echo "" >> .env
 	@cat env/development.env >> .env
 
-.env.prod: # Generate production .env
+_needed_env_var: # Check needed environment variables
 ifndef POSTGRES_PASSWORD
 	$(error POSTGRES_PASSWORD environment variable not set)
 endif
@@ -47,6 +47,9 @@ endif
 ifeq ($(FIRST_SUPERUSER),$(DEFAULT_SUPERUSER))
 	$(warning FIRST_SUPERUSER is set to '$(DEFAULT_SUPERUSER)', consider changing it.)
 endif
+
+.env.prod: # Generate production .env
+.env.prod: _needed_env_var
 	@cp env/base.env .env
 	@echo "" >> .env
 	@echo "# Production environment variables" >> .env
@@ -85,7 +88,7 @@ endif
 	chmod 400 ssh_key
 
 ssh_deploy:	## Connect via SSH to the deployment device and deploy the latest version of the app
-ssh_deploy: known_hosts ssh_key
+ssh_deploy: _needed_env_var known_hosts ssh_key
 	ssh -o UserKnownHostsFile=known_hosts \
 		-i ssh_key \
 		$(SSH_USER)@$(DOMAIN) \
@@ -93,7 +96,9 @@ ssh_deploy: known_hosts ssh_key
 			&& git fetch -p \
 			&& git reset --hard origin/$(DEPLOYEMENT_REF) \
 			&& make deploy \
-				POSTGRES_PASSWORD=$(POSTGRES_PASSWORD)"
+				POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
+				FIRST_SUPERUSER=$(FIRST_SUPERUSER) \
+				FIRST_SUPERUSER_PASSWORD=$(FIRST_SUPERUSER_PASSWORD)"
 
 follow: 	## Start following the logs of frontend and backend services
 	docker-compose logs --follow backend frontend
