@@ -2,12 +2,13 @@
 Configuration of sphinx
 """
 
-import sphinx_rtd_theme
 import datetime
+
+import sphinx_rtd_theme
 
 # Use Read the docs theme
 extensions = [
-    'sphinx_rtd_theme',
+    "sphinx_rtd_theme",
 ]
 html_theme = "sphinx_rtd_theme"
 
