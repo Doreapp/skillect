@@ -20,3 +20,9 @@ During development, it is recommended to use `docker`. For native development se
 3. Build the HTML files: `make html`
 4. (Optional) Serve the html files: `make serve`. \
     And open [`localhost:8000`](http://localhost:8000/).
+
+### Helpful documentation
+
+Sphinx documentation supports reStructuredText format. Here are some helper about the format:
+- [📖 Official reStructuredText documentation] https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
+- [📃 A cheatsheet about rst syntax]
