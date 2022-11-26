@@ -21,7 +21,7 @@ RUN python3 -m venv $VIRTUAL_ENV \
 ENV C_FORCE_ROOT=1
 
 # Other project-specific files
-ADD Makefile /work/
+ADD Makefile live_reload.py /work/
 
 ENTRYPOINT [ "make" ]
 CMD ["html"]

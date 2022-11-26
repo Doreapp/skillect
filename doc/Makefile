@@ -48,9 +48,9 @@ docker_html: build
 		-t $(DOCKER_IMAGE) \
 		html
 
-serve:		## Serve the HTML documentation
+serve:		## Serve the HTML documentation with live reload
 serve:
-	$(PYTHON) -m http.server -d html $(SERVE_PORT)
+	$(PYTHON) live_reload.py $(SRC_DIR) -p $(SERVE_PORT) -o html
 
 docker_serve:	## Serve the HTML documentation using docker
 docker_serve: build
