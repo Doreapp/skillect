@@ -5,7 +5,7 @@
  */
 
 import * as React from "react"
-import AdminRouter from "./pages/Admin"
+import adminRouter from "./pages/Admin"
 import HomePage from "./pages/Home"
 import {Routes, Route} from "react-router-dom"
 
@@ -19,7 +19,7 @@ export default class App extends React.Component<{}, {}> {
       <Routes>
         <Route path="/">
           <Route index element={<HomePage />} />
-          <AdminRouter />
+          {adminRouter()}
         </Route>
       </Routes>
     )
