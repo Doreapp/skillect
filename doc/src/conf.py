@@ -4,11 +4,9 @@ Configuration of sphinx
 
 import datetime
 
-import sphinx_rtd_theme
-
-# Use Read the docs theme
 extensions = [
-    "sphinx_rtd_theme",
+    "sphinx_rtd_theme", # Read the docs theme
+    "sphinxmermaid", # Enable mermaid graphs in doc
 ]
 html_theme = "sphinx_rtd_theme"
 

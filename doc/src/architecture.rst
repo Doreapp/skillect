@@ -17,13 +17,25 @@ and enables `HTTPS <https://en.wikipedia.org/wiki/HTTPS>`_ using `Let's Encrypt 
 Each service is in a `Docker <https://www.docker.com/>`_ container.
 The overall network is described in a `docker compose <https://docs.docker.com/compose/>`_ configuration.
 
+The overall architecture can be represented as:
+
+
+
 .. _ref-backend:
 
 Backend
 -------
 
+The backend is made of a python server (based on `FastAPI <https://fastapi.tiangolo.com/>`_).
+It uses an SQL database using `PostgreSQL` technology.
+
+The backend serves a `REST` API using `gunicorn` server.
+
+The main language used is `python`.
+
 .. warning ::
-    TODO Python, fastapi, gunicorn, REST...
+    PostgreSQL link
+    REST link
 
 
 .. _ref-frontend:
