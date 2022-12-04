@@ -16,6 +16,7 @@ import {IUser} from "../../models/User"
  */
 interface AuthContextType {
   user?: IUser
+  token?: string
   login: (username: string, password: string) => Promise<boolean>
   logout: () => Promise<void>
 }
@@ -43,9 +44,11 @@ interface Props {
  * @returns Element
  */
 export default function AuthProvider(props: Props): JSX.Element {
-  const [state, setState] = React.useState<{user?: IUser; retrieving: boolean}>(
-    {retrieving: true}
-  )
+  const [state, setState] = React.useState<{
+    user?: IUser
+    retrieving: boolean
+    token?: string
+  }>({retrieving: true})
 
   /**
    * Login function
@@ -65,7 +68,7 @@ export default function AuthProvider(props: Props): JSX.Element {
     if (user === null) {
       return false
     }
-    setState({...state, user})
+    setState({...state, user, token})
     saveLocalToken(token)
     return true
   }
@@ -74,7 +77,7 @@ export default function AuthProvider(props: Props): JSX.Element {
    * Logout
    */
   const logout = async (): Promise<void> => {
-    setState({...state, user: undefined})
+    setState({...state, user: undefined, token: undefined})
     removeLocalToken()
   }
 
@@ -90,8 +93,10 @@ export default function AuthProvider(props: Props): JSX.Element {
         .then((user) => {
           if (user === null || !user.is_active) {
             removeLocalToken()
+            setState({user: undefined, token: undefined, retrieving: false})
+          } else {
+            setState({user, token, retrieving: false})
           }
-          setState({user: user ?? undefined, retrieving: false})
         })
         .catch((_) => {
           removeLocalToken()
@@ -102,7 +107,7 @@ export default function AuthProvider(props: Props): JSX.Element {
     }
   })
 
-  const value = {user: state.user, login, logout}
+  const value = {user: state.user, token: state.token, login, logout}
 
   return <context.Provider value={value}>{props.children}</context.Provider>
 }
