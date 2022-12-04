@@ -33,6 +33,37 @@ export const api = {
   },
 
   /**
+   * Get a single school by id
+   * @param id Id of the school to get
+   * @return School details or undefined
+   */
+  async getSchool(id: string): Promise<ISchool> {
+    const response = await axios.get<ISchool>(`${API_URL}/school/${id}`)
+    return response.data
+  },
+
+  /**
+   * Update a single school.
+   * Need to be admin.
+   * @param school Updated value of the school, including id
+   * @param token Bearer token
+   * @return Updated school
+   */
+  async updateSchool(school: ISchool, token: string): Promise<ISchool> {
+    const update = {
+      name: school.name,
+      description: school.description,
+      link: school.link,
+    }
+    const response = await axios.put<ISchool>(
+      `${API_URL}/school/${school.id}`,
+      update,
+      authHeaders(token)
+    )
+    return response.data
+  },
+
+  /**
    * Login as user
    * @param username User username
    * @param password User plain text password
