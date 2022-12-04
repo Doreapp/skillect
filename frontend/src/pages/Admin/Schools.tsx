@@ -20,7 +20,7 @@ import {ISchool} from "../../models/School"
 import {api} from "../../core/api"
 import AddIcon from "@mui/icons-material/Add"
 import Page from "./Page"
-import {useParams} from "react-router-dom"
+import {useParams, useNavigate} from "react-router-dom"
 import {useAuth} from "../../components/Auth/Provider"
 
 export interface SchoolsPageState {
@@ -65,11 +65,11 @@ function listItem(
   key: number,
   primary: React.ReactNode,
   secondary: React.ReactNode,
-  disabled: boolean = false
+  onClick: React.MouseEventHandler<HTMLDivElement> | undefined = undefined
 ): JSX.Element {
   return (
     <ListItem key={key} className="p-0">
-      <ListItemButton disabled={disabled}>
+      <ListItemButton onClick={onClick} disabled={onClick === undefined}>
         <ListItemText primary={primary} secondary={secondary} />
       </ListItemButton>
     </ListItem>
@@ -80,6 +80,7 @@ export function SchoolsPage(): JSX.Element {
     schools: undefined,
     tried: false,
   })
+  const navigate = useNavigate()
 
   React.useEffect(() => {
     if (state.tried) {
@@ -101,17 +102,15 @@ export function SchoolsPage(): JSX.Element {
   if (state.schools === undefined) {
     // Only show a single squeleton element
     items.push(
-      listItem(
-        0,
-        <Skeleton variant="text" />,
-        <Skeleton variant="text" />,
-        true
-      )
+      listItem(0, <Skeleton variant="text" />, <Skeleton variant="text" />)
     )
   } else {
     let key = 0
     for (const school of state.schools) {
-      items.push(listItem(key++, school.name, school.description))
+      const onClick = (): void => {
+        navigate(`${school.id}`, {replace: false})
+      }
+      items.push(listItem(key++, school.name, school.description, onClick))
     }
   }
 
@@ -302,7 +301,7 @@ export function SchoolPage(): JSX.Element {
   }
 
   return (
-    <Page title="School" requireLogin={true}>
+    <Page title="School edition" requireLogin={true}>
       <Container className="flex justify-around">
         <Box
           sx={{
