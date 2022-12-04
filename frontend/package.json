@@ -6,6 +6,7 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "^5.10.9",
+    "@mui/lab": "^5.0.0-alpha.110",
     "@mui/material": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
