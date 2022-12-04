@@ -3,7 +3,7 @@
  */
 
 import * as React from "react"
-import SchoolsPage from "./Schools"
+import {SchoolsPage, SchoolPage} from "./Schools"
 import LoginPage from "./Login"
 import HomePage from "./Home"
 import {Route, Outlet} from "react-router-dom"
@@ -23,6 +23,7 @@ export default function adminRouter(): JSX.Element {
       <Route index element={<HomePage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="school" element={<SchoolsPage />} />
+      <Route path="school/:id" element={<SchoolPage />} />
     </Route>
   )
 }
