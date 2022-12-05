@@ -14,18 +14,14 @@ WORKDIR /work/
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV VIRTUAL_ENV=/work/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ADD requirements.txt requirements-dev.txt /work/
+ADD requirements.txt /work/
 RUN python3 -m venv $VIRTUAL_ENV \
- && pip install -r requirements.txt -r requirements-dev.txt
+ && pip install -r requirements.txt
 
 ENV C_FORCE_ROOT=1
 
 # Other project-specific files
-ADD Makefile \
- .pylintrc \
- gunicorn_conf.py \
- /work/
-COPY app/ /work/app/
+ADD Makefile live_reload.py /work/
 
 ENTRYPOINT [ "make" ]
-CMD ["serve"]
+CMD ["html"]
