@@ -66,6 +66,10 @@ dev: .env.dev
 	$(DOCKER_COMPOSE_DEVELOPMENT) \
 		up --build --detach
 
+dev-now: .env.dev
+	$(DOCKER_COMPOSE_DEVELOPMENT) \
+		up --detach
+
 $(TRAEFIK_PUBLIC_NETWORK): # Create the network
 	@docker network create $(TRAEFIK_PUBLIC_NETWORK) || \
 		echo "> $(TRAEFIK_PUBLIC_NETWORK) network already exist."
